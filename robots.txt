@@ -1,0 +1,7 @@
+# All web crawlers are allowed to access the entire site
+User-agent: *
+Disallow:
+Allow: /assets/
+
+# Specify the location of the sitemap
+Sitemap: https://token6900.com/sitemap.xml
